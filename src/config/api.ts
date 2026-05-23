@@ -5,7 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 //  Production: Render cloud backend (works on any phone, 24/7)
 //  Development: swap to your local IP e.g. 'http://192.168.1.7:5000/api'
 // ─────────────────────────────────────────────────────────
-export const API_BASE_URL = 'https://localbiz-backend.onrender.com/api';
+export const API_BASE_URL = 'https://localbiz-backend-xvf2.onrender.com/api';
 
 // Axios instance shared across all stores
 export const api = axios.create({

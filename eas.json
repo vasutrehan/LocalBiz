@@ -11,7 +11,7 @@
         "gradleCommand": ":app:assembleDebug"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://localbiz-backend.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://localbiz-backend-xvf2.onrender.com/api"
       }
     },
     "preview": {
@@ -20,7 +20,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://localbiz-backend.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://localbiz-backend-xvf2.onrender.com/api"
       }
     },
     "production": {
@@ -28,7 +28,7 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://localbiz-backend.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://localbiz-backend-xvf2.onrender.com/api"
       }
     },
     "production-apk": {
@@ -37,7 +37,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://localbiz-backend.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://localbiz-backend-xvf2.onrender.com/api"
       }
     }
   }
