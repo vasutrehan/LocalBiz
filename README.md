@@ -26,7 +26,7 @@
 
 | Service | Repo | Live URL |
 |---------|------|----------|
-| 🖥️ Node.js Backend | [localbiz-backend](https://github.com/vasutrehan/localbiz-backend) | `https://localbiz-backend.onrender.com/api` |
+| 🖥️ Node.js Backend | [localbiz-backend](https://github.com/vasutrehan/localbiz-backend) | `https://localbiz-backend-xvf2.onrender.com/api` |
 | 🤖 Python ML Service | [localbiz-ml](https://github.com/vasutrehan/localbiz-ml) | `https://localbiz-ml.onrender.com` |
 
 ---
@@ -130,7 +130,7 @@ npx expo start
 
 Scan the QR code with **Expo Go** on your phone.
 
-> The app connects to the live backend at `https://localbiz-backend.onrender.com/api` — no local server needed.
+> The app connects to the live backend at `https://localbiz-backend-xvf2.onrender.com/api` — no local server needed.
 
 ---
 
