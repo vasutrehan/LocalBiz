@@ -8,6 +8,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors, Typography, Spacing, Radius, Shadow } from 'src/constants/theme';
 import { useBusinessStore } from 'src/store/businessStore';
 import { Button } from 'src/components/UI';
+import { api } from 'src/config/api';
 
 export default function WriteReviewScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,10 +23,15 @@ export default function WriteReviewScreen() {
   const handleSubmit = async () => {
     if (rating === 0) return;
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1000)); // Replace with API call
-    setSubmitting(false);
-    setSubmitted(true);
-    setTimeout(() => router.back(), 1800);
+    try {
+      await api.post(`/businesses/${id}/reviews`, { rating, text });
+      setSubmitted(true);
+      setTimeout(() => router.back(), 1500);
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Failed to submit review');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -49,7 +55,7 @@ export default function WriteReviewScreen() {
           <View style={{ width: 60 }} />
         </View>
 
-        <ScrollView contentContainerStyle={styles.scroll}>
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           {business && (
             <View style={styles.bizInfo}>
               <Text style={styles.bizName}>{business.name}</Text>

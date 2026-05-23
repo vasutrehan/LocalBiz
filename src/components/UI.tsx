@@ -26,13 +26,13 @@ export const Button: React.FC<ButtonProps> = ({
   loading, disabled, leftIcon, rightIcon, style, fullWidth,
 }) => {
   const isDisabled = disabled || loading;
-  const containerStyles: ViewStyle[] = [
+  const containerStyles: any[] = [
     styles.btnBase,
-    styles[`btn_${variant}`],
-    styles[`btn_${size}`],
+    styles[`btn_${variant}` as keyof typeof styles],
+    styles[`btn_${size}` as keyof typeof styles],
     isDisabled && styles.btnDisabled,
     fullWidth && { alignSelf: 'stretch' as const },
-    style as ViewStyle,
+    style,
   ];
 
   return (

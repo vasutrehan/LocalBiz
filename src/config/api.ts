@@ -2,11 +2,10 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 // ─────────────────────────────────────────────────────────
-//  ONLY CHANGE THIS LINE — put your Windows IP here
-//  Run `ipconfig` in cmd → look for IPv4 Address
-//  Example: 'http://192.168.1.5:5000/api'
+//  Production: Render cloud backend (works on any phone, 24/7)
+//  Development: swap to your local IP e.g. 'http://192.168.1.7:5000/api'
 // ─────────────────────────────────────────────────────────
-export const API_BASE_URL = ' http://192.168.1.4:5000/api';
+export const API_BASE_URL = 'https://localbiz-backend.onrender.com/api';
 
 // Axios instance shared across all stores
 export const api = axios.create({

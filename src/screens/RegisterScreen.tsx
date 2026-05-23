@@ -2,18 +2,41 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, ScrollView,
-  KeyboardAvoidingView, Platform, StatusBar,
+  KeyboardAvoidingView, Platform, StatusBar, Switch
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Colors, Typography, Spacing, Radius, Shadow } from 'src/constants/theme';
 import { useAuthStore } from 'src/store/authStore';
 import { Button } from 'src/components/UI';
 
+const Field = ({ label, icon, placeholder, value, onChange, type = 'default', secure = false }:
+  { label: string; icon: string; placeholder: string; value: string; onChange: (v: string) => void; type?: any; secure?: boolean }) => (
+  <View style={styles.inputGroup}>
+    <Text style={styles.inputLabel}>{label}</Text>
+    <View style={styles.inputWrapper}>
+      <Text style={styles.inputIcon}>{icon}</Text>
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        placeholderTextColor={Colors.textTertiary}
+        value={value}
+        onChangeText={onChange}
+        keyboardType={type}
+        secureTextEntry={secure}
+        autoCapitalize={type === 'email-address' ? 'none' : 'words'}
+      />
+    </View>
+  </View>
+);
+
 export default function RegisterScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
+  React.useEffect(() => { if (params.role === 'owner') setIsOwner(true); }, [params.role]);
   const { register, isLoading } = useAuthStore();
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirm: '' });
   const [error, setError] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
 
   const set = (key: keyof typeof form) => (val: string) => setForm(f => ({ ...f, [key]: val }));
 
@@ -29,32 +52,14 @@ export default function RegisterScreen() {
       setError('Password must be at least 6 characters'); return;
     }
     try {
-      await register(form.name, form.email, form.password, form.phone);
-      router.replace('/(tabs)/' as any);
+      await register(form.name, form.email, form.password, form.phone, isOwner ? 'owner' : 'customer');
+      router.replace(isOwner ? '/create-business' as any : '/(tabs)/' as any);
     } catch {
       setError('Registration failed. Please try again.');
     }
   };
 
-  const Field = ({ label, icon, placeholder, value, onChange, type = 'default', secure = false }:
-    { label: string; icon: string; placeholder: string; value: string; onChange: (v: string) => void; type?: any; secure?: boolean }) => (
-    <View style={styles.inputGroup}>
-      <Text style={styles.inputLabel}>{label}</Text>
-      <View style={styles.inputWrapper}>
-        <Text style={styles.inputIcon}>{icon}</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          placeholderTextColor={Colors.textTertiary}
-          value={value}
-          onChangeText={onChange}
-          keyboardType={type}
-          secureTextEntry={secure}
-          autoCapitalize={type === 'email-address' ? 'none' : 'words'}
-        />
-      </View>
-    </View>
-  );
+
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -82,6 +87,10 @@ export default function RegisterScreen() {
             <Field label="Password" icon="🔒" placeholder="Min. 6 characters" value={form.password} onChange={set('password')} secure />
             <Field label="Confirm Password" icon="🔒" placeholder="Re-enter password" value={form.confirm} onChange={set('confirm')} secure />
 
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: Spacing.sm, marginBottom: Spacing.sm }}>
+              <Text style={{ fontSize: 14, fontFamily: Typography.bodySemiBold, color: Colors.text }}>Register as a Business Owner</Text>
+              <Switch value={isOwner} onValueChange={setIsOwner} trackColor={{ true: Colors.primary, false: Colors.border }} />
+            </View>
             <Text style={styles.terms}>
               By registering, you agree to our{' '}
               <Text style={{ color: Colors.primary }}>Terms of Service</Text>

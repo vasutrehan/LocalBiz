@@ -143,7 +143,7 @@ export default function LoginScreen() {
           </View>
 
           {/* ── Business owner CTA ── */}
-          <TouchableOpacity style={styles.ownerCTA} onPress={() => router.push('/register-business' as any)}>
+          <TouchableOpacity style={styles.ownerCTA} onPress={() => router.push({ pathname: '/register', params: { role: 'owner' } })}>
             <Text style={styles.ownerCTAText}>🏪  List your business for free</Text>
           </TouchableOpacity>
 

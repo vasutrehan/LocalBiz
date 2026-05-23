@@ -1,8 +1,8 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
-import {
+import { 
   View, Text, TouchableOpacity, StyleSheet,
-  SafeAreaView, ScrollView, Switch,
-} from 'react-native';
+   ScrollView, Switch } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors, Typography, Spacing, Radius, Shadow, SORT_OPTIONS } from 'src/constants/theme';
 import { useBusinessStore } from 'src/store/businessStore';

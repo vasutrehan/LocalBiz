@@ -23,7 +23,7 @@ interface BusinessState {
 }
 
 const DEFAULT_FILTERS: SearchFilters = {
-  category: 'all', maxDistance: 10, minRating: 0,
+  category: 'all', maxDistance: 50000, minRating: 0,
   priceRange: [1, 2, 3, 4], isOpen: false, sortBy: 'distance',
 };
 
@@ -31,7 +31,7 @@ const DEFAULT_FILTERS: SearchFilters = {
 // MongoDB stores location as GeoJSON: { type: 'Point', coordinates: [lng, lat] }
 // react-native-maps needs: { latitude: number, longitude: number }
 // This function normalises every business coming from the API
-const normaliseBusiness = (b: any): Business => {
+export const normaliseBusiness = (b: any): Business => {
   let latitude  = b.location?.latitude;
   let longitude = b.location?.longitude;
 

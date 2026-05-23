@@ -1,9 +1,9 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
-  Dimensions, ScrollView, ActivityIndicator,
-} from 'react-native';
-import MapView, { Marker, Circle, PROVIDER_GOOGLE, UrlTile } from 'react-native-maps';
+import { 
+  View, Text, StyleSheet,  TouchableOpacity,
+  Dimensions, ScrollView, ActivityIndicator, Platform } from 'react-native';
+import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useRouter } from 'expo-router';
 import {
   Colors, Typography, Spacing, Radius, Shadow, CATEGORIES,
@@ -15,11 +15,6 @@ import { CategoryPills } from 'src/components/CategoryPills';
 import { OpenBadge, StarRating } from 'src/components/UI';
 
 const { width } = Dimensions.get('window');
-
-// ── Your Google Maps API key directly here ──
-// Expo Go ignores app.json android.config.googleMaps
-// The key must be passed to MapView directly via urlTile or used with PROVIDER_DEFAULT
-const MAPS_API_KEY = 'AIzaSyC2FKCr3rzsT1Fu8moAQS9NdVAJf2HU01I';
 
 const CAT_COLORS: Record<string, string> = {
   food: Colors.catFood,      health: Colors.catHealth,
@@ -91,9 +86,8 @@ export default function MapScreen() {
         <MapView
           ref={mapRef}
           style={StyleSheet.absoluteFillObject}
-          // Use PROVIDER_DEFAULT (Apple/OSM) in Expo Go — works without API key
-          // Switch to PROVIDER_GOOGLE only in production EAS build
-          provider={undefined}
+          provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : undefined}
+          mapType="standard"
           initialRegion={region}
           showsUserLocation
           showsMyLocationButton={false}

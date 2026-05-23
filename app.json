@@ -5,17 +5,12 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#FF5C35"
-    },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.localbiz.app",
-      "config": {
-        "googleMapsApiKey": "AIzaSyC2FKCr3rzsT1Fu8moAQS9NdVAJf2HU01I"
-      },
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "LocalBiz uses your location to find nearby businesses.",
         "NSLocationAlwaysUsageDescription": "LocalBiz uses your location to find nearby businesses."
@@ -33,11 +28,7 @@
         }
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
     "plugins": [
-      "expo-dev-client",
       "expo-router",
       "expo-location",
       "expo-secure-store"

@@ -1,15 +1,14 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, SafeAreaView, FlatList, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Colors, Typography, Spacing, Radius, Shadow } from 'src/constants/theme';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { Colors, Typography, Spacing, Radius } from 'src/constants/theme';
 import { BusinessCard } from 'src/components/BusinessCard';
 import { api } from '../config/api';
-import { useBusinessStore } from 'src/store/businessStore';
+import { useBusinessStore, normaliseBusiness } from 'src/store/businessStore';
 
 const TABS = ['For You', 'Trending', 'New', 'Top Rated'];
 
 export default function RecommendationsScreen() {
-  const router = useRouter();
   const { userLocation } = useBusinessStore();
   const [activeTab, setActiveTab] = useState(0);
   const [data, setData] = useState<any[]>([]);
@@ -21,19 +20,27 @@ export default function RecommendationsScreen() {
   const fetchTab = async (tab: number) => {
     setIsLoading(true);
     setData([]);
+    const lat = userLocation?.latitude ?? 28.4089;
+    const lng = userLocation?.longitude ?? 77.3178;
     try {
-      let res;
-      const lat = userLocation?.latitude ?? 28.4089;
-      const lng = userLocation?.longitude ?? 77.3178;
       if (tab === 0) {
-        res = await api.get('/recommendations', { params: { lat, lng } });
-        setIsFallback(res.data.fallback ?? false);
-        setData(res.data.data.map((b: any) => ({ ...b, id: b._id ?? b.id })));
+        // Try ML recommendations first, fall back to top-rated if unavailable
+        try {
+          const res = await api.get('/recommendations', { params: { lat, lng } });
+          setIsFallback(res.data.fallback ?? false);
+          setData(res.data.data.map(normaliseBusiness));
+        } catch {
+          setIsFallback(true);
+          const fallback = await api.get('/businesses/nearby', {
+            params: { lat, lng, distance: 50000, sort: 'rating' },
+          });
+          setData(fallback.data.data.map(normaliseBusiness));
+        }
       } else {
         const sort = ['rating', 'popular', 'newest', 'rating'][tab];
-        res = await api.get('/businesses/nearby', { params: { lat, lng, distance: 10, sort } });
+        const res = await api.get('/businesses/nearby', { params: { lat, lng, distance: 50000, sort } });
         setIsFallback(false);
-        setData(res.data.data.map((b: any) => ({ ...b, id: b._id ?? b.id })));
+        setData(res.data.data.map(normaliseBusiness));
       }
     } catch (e) {
       console.error('Recommendations error:', e);
@@ -117,10 +124,10 @@ const styles = StyleSheet.create({
   infoBanner: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: Colors.primaryMuted, marginHorizontal: Spacing.base, marginVertical: Spacing.md, padding: Spacing.md, borderRadius: Radius.lg, borderWidth: 1, borderColor: Colors.primary + '30' },
   infoTitle: { fontSize: 14, fontFamily: Typography.bodySemiBold, color: Colors.primary, marginBottom: 2 },
   infoText: { fontSize: 12, color: Colors.textSecondary },
-  tabs: { paddingHorizontal: Spacing.base, gap: 8, paddingBottom: Spacing.sm, backgroundColor: Colors.surface, paddingTop: Spacing.sm },
-  tab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: Radius.full, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.surfaceAlt },
+  tabs: { paddingHorizontal: Spacing.base, paddingBottom: Spacing.sm, backgroundColor: Colors.surface, paddingTop: Spacing.sm },
+  tab: { paddingHorizontal: 20, paddingVertical: 10, marginRight: 10, justifyContent: 'center', alignItems: 'center', borderRadius: Radius.full, borderWidth: 1.5, borderColor: Colors.border, backgroundColor: Colors.surfaceAlt },
   tabActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  tabLabel: { fontSize: 13, fontFamily: Typography.bodySemiBold, color: Colors.textSecondary },
+  tabLabel: { fontSize: 14, fontFamily: Typography.bodySemiBold, color: Colors.textSecondary, flexShrink: 0 },
   tabLabelActive: { color: Colors.textInverse },
   reasonRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6, paddingLeft: 44 },
   reasonDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Colors.primary },

@@ -1,179 +1,102 @@
-# 🏪 LocalBiz — React Native App
+# 🏪 LocalBiz — Hyperlocal Business Discovery App
 
-> A smart hyperlocal platform for local business discovery and communication.
-> Built with **Expo + React Native (TypeScript)**, **Zustand**, **React Query**, and **Expo Router**.
+<p align="center">
+  <img src="https://img.shields.io/badge/React_Native-0.83-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/Expo-55-000020?style=for-the-badge&logo=expo" />
+  <img src="https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript" />
+  <img src="https://img.shields.io/badge/Zustand-4.x-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android" />
+</p>
 
----
-
-## 📁 Project Structure
-
-```
-LocalBiz/
-├── app/                          # Expo Router file-based routing
-│   ├── _layout.tsx               # Root layout (fonts, stack navigator)
-│   ├── index.tsx                 # Entry redirect
-│   ├── onboarding.tsx            # Onboarding flow
-│   ├── login.tsx                 # Login screen
-│   ├── register.tsx              # Registration screen
-│   ├── filters.tsx               # Filter modal (bottom sheet)
-│   ├── notifications.tsx         # Notifications screen
-│   ├── business/[id].tsx         # Business detail page (dynamic route)
-│   ├── write-review/[id].tsx     # Write review modal
-│   └── (tabs)/
-│       ├── _layout.tsx           # Custom tab bar
-│       ├── index.tsx             # Home / Discovery feed
-│       ├── map.tsx               # Map explorer
-│       ├── recommendations.tsx   # AI For You tab
-│       ├── saved.tsx             # Saved/Favourites
-│       └── profile.tsx           # User profile
-│
-├── src/
-│   ├── screens/                  # All screen components
-│   │   ├── HomeScreen.tsx
-│   │   ├── BusinessDetailScreen.tsx
-│   │   ├── MapScreen.tsx
-│   │   ├── RecommendationsScreen.tsx
-│   │   ├── SavedScreen.tsx
-│   │   ├── ProfileScreen.tsx
-│   │   ├── LoginScreen.tsx
-│   │   ├── RegisterScreen.tsx
-│   │   ├── OnboardingScreen.tsx
-│   │   ├── FiltersScreen.tsx
-│   │   └── WriteReviewScreen.tsx
-│   │
-│   ├── components/               # Reusable UI components
-│   │   ├── UI.tsx                # Button, Badge, StarRating, Skeleton, etc.
-│   │   ├── BusinessCard.tsx      # Card (default / compact / featured)
-│   │   ├── SearchBar.tsx
-│   │   └── CategoryPills.tsx
-│   │
-│   ├── store/                    # Zustand global state
-│   │   ├── authStore.ts          # User auth, login, logout, saved toggle
-│   │   └── businessStore.ts      # Businesses, search, filters, location
-│   │
-│   └── constants/
-│       ├── theme.ts              # Colors, Typography, Spacing, Shadow tokens
-│       ├── types.ts              # All TypeScript interfaces
-│       └── mockData.ts           # Realistic seed data (Faridabad businesses)
-│
-├── app.json                      # Expo config
-├── babel.config.js
-├── tsconfig.json
-└── package.json
-```
+<p align="center">
+  <b>Find local businesses near you — powered by GPS, AI recommendations, and real-time data.</b>
+</p>
 
 ---
 
-## 🚀 Getting Started
+## 📲 Download & Try
 
-### 1. Prerequisites
-- Node.js 18+
-- Expo CLI: `npm install -g expo-cli`
-- Expo Go app on your Android/iOS device
+[![Download APK](https://img.shields.io/badge/⬇️_Download_APK-LocalBiz_v1.0-FF5C35?style=for-the-badge)](https://github.com/vasutrehan/localbiz/releases/latest)
 
-### 2. Install dependencies
-```bash
-cd LocalBiz
-npm install
-
-# Install Google Fonts packages
-npx expo install @expo-google-fonts/syne @expo-google-fonts/dm-sans expo-splash-screen
-```
-
-### 3. Run the app
-```bash
-npx expo start
-```
-Scan the QR code with Expo Go on your phone.
+> Install the `.apk` on any Android phone — no Play Store needed.
 
 ---
 
-## 🔑 Connecting to the Real Backend
+## 🔗 Related Repos
 
-All API calls are currently mocked. To connect to your Node.js backend:
-
-### In `src/store/authStore.ts`
-```ts
-// Replace mock with:
-import axios from 'axios';
-const API = 'http://YOUR_BACKEND_URL/api';
-
-login: async (email, password) => {
-  const res = await axios.post(`${API}/auth/login`, { email, password });
-  const { user, token } = res.data;
-  set({ user, token, isAuthenticated: true });
-}
-```
-
-### In `src/store/businessStore.ts`
-```ts
-fetchBusinesses: async () => {
-  const { userLocation } = get();
-  const res = await axios.get(`${API}/businesses`, {
-    params: { lat: userLocation?.latitude, lng: userLocation?.longitude }
-  });
-  set({ businesses: res.data.data });
-}
-```
+| Service | Repo | Live URL |
+|---------|------|----------|
+| 🖥️ Node.js Backend | [localbiz-backend](https://github.com/vasutrehan/localbiz-backend) | `https://localbiz-backend.onrender.com/api` |
+| 🤖 Python ML Service | [localbiz-ml](https://github.com/vasutrehan/localbiz-ml) | `https://localbiz-ml.onrender.com` |
 
 ---
 
-## 🗺 Adding Real Maps (react-native-maps)
+## ✨ Features
 
-In `MapScreen.tsx`, replace the placeholder with:
-```tsx
-import MapView, { Marker } from 'react-native-maps';
-
-<MapView
-  style={StyleSheet.absoluteFillObject}
-  initialRegion={{
-    latitude: userLocation?.latitude ?? 28.4089,
-    longitude: userLocation?.longitude ?? 77.3178,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
-  }}
->
-  {filteredBusinesses.map(b => (
-    <Marker
-      key={b.id}
-      coordinate={b.location}
-      title={b.name}
-      onPress={() => handleMarkerPress(b, index)}
-    />
-  ))}
-</MapView>
-```
+| Feature | Description |
+|---------|-------------|
+| 📍 GPS Discovery | Find businesses within a custom radius using live location |
+| 🗺️ Interactive Map | Google Maps with category-colored pins and card sync |
+| 🤖 AI For You | ML-powered personalised recommendations (Cosine Similarity) |
+| ⭐ Reviews | Write, rate, and read reviews with owner replies |
+| 🔖 Save/Bookmark | Save favourites with instant optimistic UI updates |
+| 🔔 Notifications | Real-time alerts via Socket.io |
+| 📞 WhatsApp CTA | One-tap to WhatsApp the business |
+| 🔐 Secure Auth | JWT + expo-secure-store encrypted token storage |
+| 👤 Role System | Customer / Owner / Admin roles |
 
 ---
 
-## 🤖 Connecting AI Recommendations
-
-Your Python FastAPI service returns recommended businesses:
-```ts
-// In RecommendationsScreen.tsx
-const res = await axios.get(`${ML_API}/recommend`, {
-  params: { userId: user.id, lat: userLocation.latitude, lng: userLocation.longitude }
-});
-```
-
----
-
-## 📱 Screens Summary
+## 📱 App Screens
 
 | Screen | Description |
 |--------|-------------|
-| Onboarding | 4-slide animated intro |
-| Login | Email/password + Google OAuth |
-| Register | Full user registration |
-| Home | Feed with featured + nearby businesses |
-| Map | Interactive map with pins + bottom cards |
-| For You | AI recommendations with tabs |
-| Saved | User's saved businesses |
-| Profile | User info, settings, logout |
-| Business Detail | Full profile, gallery, reviews, WhatsApp CTA |
-| Write Review | Star rating + text review |
-| Filters | Sort, distance, rating, price, open now |
-| Notifications | Read/unread push notifications |
+| Onboarding | 4-slide animated intro on first launch |
+| Login / Register | Email + password auth |
+| Home | Featured + nearby businesses feed |
+| Map | Interactive map with pins, filters, and bottom cards |
+| For You | AI recommendations with tabs (Trending, New, Top Rated) |
+| Business Detail | Full profile, gallery, reviews, WhatsApp button |
+| Write Review | Star rating + text review submission |
+| Filters | Sort by distance, rating, price, open now, category |
+| Saved | Bookmarked businesses |
+| Notifications | Read/unread live notifications |
+| Profile | User info, avatar, settings, logout |
+
+---
+
+## 🗂 Project Structure
+
+```
+LocalBiz/
+├── app/                    ← Expo Router (file-based navigation)
+│   ├── _layout.tsx         ← Root layout, fonts
+│   ├── onboarding.tsx
+│   ├── login.tsx
+│   ├── register.tsx
+│   └── (tabs)/             ← Bottom tab screens
+│       ├── index.tsx       ← Home
+│       ├── map.tsx
+│       ├── recommendations.tsx
+│       ├── saved.tsx
+│       └── profile.tsx
+│
+├── src/
+│   ├── screens/            ← Screen components
+│   ├── components/         ← Reusable UI (BusinessCard, SearchBar, etc.)
+│   ├── store/              ← Zustand global state
+│   │   ├── authStore.ts    ← Auth, login, logout, save toggle
+│   │   └── businessStore.ts ← Businesses, filters, location
+│   ├── config/
+│   │   └── api.ts          ← Axios client (API base URL lives here)
+│   └── constants/
+│       ├── theme.ts        ← Colors, typography, spacing tokens
+│       └── types.ts        ← TypeScript interfaces
+│
+├── eas.json                ← Expo EAS Build config
+├── app.json                ← Expo app config
+└── package.json
+```
 
 ---
 
@@ -189,7 +112,59 @@ const res = await axios.get(`${ML_API}/recommend`, {
 
 ---
 
+## 🚀 Run Locally
+
+### Prerequisites
+- Node.js 18+
+- **Expo Go** app on your Android device
+
+```bash
+# 1. Clone and install
+git clone https://github.com/vasutrehan/localbiz
+cd localbiz
+npm install
+
+# 2. Start the Expo dev server
+npx expo start
+```
+
+Scan the QR code with **Expo Go** on your phone.
+
+> The app connects to the live backend at `https://localbiz-backend.onrender.com/api` — no local server needed.
+
+---
+
+## 📦 Build APK (via Expo EAS)
+
+```bash
+npm install -g eas-cli
+eas login
+eas build --platform android --profile preview
+```
+
+The APK will be built in the cloud and available to download from the Expo dashboard.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | React Native 0.83 + Expo 55 |
+| Language | TypeScript |
+| Navigation | Expo Router (file-based) |
+| State | Zustand |
+| HTTP | Axios |
+| Maps | react-native-maps (Google Maps) |
+| Location | expo-location |
+| Auth Storage | expo-secure-store |
+| Fonts | @expo-google-fonts/syne, dm-sans |
+
+---
+
 ## 👨‍💻 Author
 
 **Vasu Trehan** | B.Tech CSE | Dr. ADGIPS (2022–26)  
 Major Project under Ms. Apurva Jain
+
+[![GitHub](https://img.shields.io/badge/GitHub-vasutrehan-black?style=flat&logo=github)](https://github.com/vasutrehan)

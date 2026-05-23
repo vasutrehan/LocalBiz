@@ -1,9 +1,9 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import {
-  View, Text, ScrollView, StyleSheet, SafeAreaView,
+import { 
+  View, Text, ScrollView, StyleSheet, 
   TouchableOpacity, RefreshControl, Animated, StatusBar,
-  ActivityIndicator,
-} from 'react-native';
+  ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location';
 import { Colors, Typography, Spacing, Radius, Shadow } from 'src/constants/theme';

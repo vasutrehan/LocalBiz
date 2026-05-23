@@ -9,7 +9,7 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, phone: string) => Promise<void>;
+  register: (name: string, email: string, password: string, phone: string, role?: string) => Promise<void>;
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
@@ -38,10 +38,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  register: async (name, email, password, phone) => {
+  register: async (name, email, password, phone, role) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await api.post('/auth/register', { name, email, password, phone });
+      const res = await api.post('/auth/register', role ? { name, email, password, phone, role } : { name, email, password, phone });
       const { user, token } = res.data;
       await saveToken(token);
       set({ user, token, isAuthenticated: true, isLoading: false });
@@ -76,10 +76,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   toggleSaved: async (businessId) => {
     const { user } = get();
     if (!user) return;
-    const alreadySaved = user.savedBusinessIds.includes(businessId);
+    const savedIds = user.savedBusinessIds || [];
+    const alreadySaved = savedIds.includes(businessId);
     const newSaved = alreadySaved
-      ? user.savedBusinessIds.filter(id => id !== businessId)
-      : [...user.savedBusinessIds, businessId];
+      ? savedIds.filter(id => id !== businessId)
+      : [...savedIds, businessId];
     set({ user: { ...user, savedBusinessIds: newSaved } });
     try {
       await api.put(`/auth/saved/${businessId}`);

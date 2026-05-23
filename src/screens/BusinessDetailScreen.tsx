@@ -10,7 +10,8 @@ import { useAuthStore } from 'src/store/authStore';
 import { StarRating, OpenBadge, Divider, Tag } from 'src/components/UI';
 import { Review, Business } from 'src/constants/types';
 import { api } from '../config/api';
-
+import { useFocusEffect } from 'expo-router';
+import { checkIsOpen } from 'src/utils/time';
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 280;
 
@@ -26,7 +27,11 @@ export default function BusinessDetailScreen() {
 
   const isSaved = user?.savedBusinessIds.includes(id ?? '') ?? false;
 
-  useEffect(() => { if (id) load(); }, [id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (id) load();
+    }, [id])
+  );
 
   const load = async () => {
     setIsLoading(true);
@@ -94,7 +99,7 @@ export default function BusinessDetailScreen() {
             keyExtractor={(_, i) => i.toString()}
             onScroll={e => setActiveImageIndex(Math.round(e.nativeEvent.contentOffset.x / width))}
             renderItem={({ item }) => (
-              <Image source={{ uri: item }} style={{ width, height: IMG_HEIGHT, resizeMode: 'cover' }} />
+              <Image source={{ uri: item || 'https://via.placeholder.com/400x300?text=No+Image' }} style={{ width, height: IMG_HEIGHT, resizeMode: 'cover' }} />
             )}
           />
           <View style={styles.imageDots}>
@@ -118,7 +123,7 @@ export default function BusinessDetailScreen() {
                 {business.isVerified && (
                   <View style={styles.verifiedBadge}><Text style={styles.verifiedText}>✓ Verified</Text></View>
                 )}
-                <OpenBadge isOpen={business.isOpen ?? false} />
+                <OpenBadge isOpen={business.isOpen ?? checkIsOpen(business.openingHours)} />
               </View>
               <Text style={styles.bizName}>{business.name}</Text>
               <Text style={styles.bizCategory}>{business.subcategory ?? business.category}</Text>
@@ -259,7 +264,7 @@ export default function BusinessDetailScreen() {
 const ReviewCard = ({ review }: { review: any }) => (
   <View style={styles.reviewCard}>
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-      <Image source={{ uri: review.user?.avatar ?? `https://i.pravatar.cc/40?u=${review.user?._id}` }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+      <Image source={{ uri: review.user?.avatar || `https://i.pravatar.cc/40?u=${review.user?._id || Math.random()}` }} style={{ width: 40, height: 40, borderRadius: 20 }} />
       <View style={{ flex: 1 }}>
         <Text style={{ fontSize: 14, fontFamily: Typography.bodySemiBold, color: Colors.text, marginBottom: 3 }}>{review.user?.name ?? 'Anonymous'}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>

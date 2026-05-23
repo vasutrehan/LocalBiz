@@ -22,7 +22,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
 }) => {
   const router = useRouter();
   const { user, toggleSaved } = useAuthStore();
-  const isSaved = user?.savedBusinessIds.includes(business.id) ?? false;
+  const isSaved = (user?.savedBusinessIds || []).includes(business.id);
 
   const handlePress = () => router.push(`/business/${business.id}` as any);
   const handleSave = useCallback((e: any) => {
@@ -39,7 +39,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
   if (variant === 'compact') {
     return (
       <TouchableOpacity style={styles.compact} onPress={handlePress} activeOpacity={0.88}>
-        <Image source={{ uri: business.coverImage }} style={styles.compactImage} />
+        <Image source={{ uri: business.coverImage || 'https://via.placeholder.com/150?text=No+Image' }} style={styles.compactImage} />
         <View style={styles.compactBody}>
           <Text style={styles.compactName} numberOfLines={1}>{business.name}</Text>
           <StarRating rating={business.rating} size={11} />
@@ -52,7 +52,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
   if (variant === 'featured') {
     return (
       <TouchableOpacity style={styles.featured} onPress={handlePress} activeOpacity={0.9}>
-        <Image source={{ uri: business.coverImage }} style={styles.featuredImage} />
+        <Image source={{ uri: business.coverImage || 'https://via.placeholder.com/400x300?text=No+Image' }} style={styles.featuredImage} />
         <View style={styles.featuredOverlay} />
         {showSave && (
           <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
@@ -79,7 +79,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
   return (
     <TouchableOpacity style={[styles.card, Shadow.md]} onPress={handlePress} activeOpacity={0.88}>
       <View>
-        <Image source={{ uri: business.coverImage }} style={styles.cardImage} />
+        <Image source={{ uri: business.coverImage || 'https://via.placeholder.com/400x300?text=No+Image' }} style={styles.cardImage} />
         {showSave && (
           <TouchableOpacity style={styles.saveBtn} onPress={handleSave} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
             <Text style={{ fontSize: 22, color: isSaved ? Colors.primary : Colors.textInverse }}>
